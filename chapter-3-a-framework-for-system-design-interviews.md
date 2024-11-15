@@ -1,4 +1,4 @@
-# CHAPTER 3: A FRAMEWORK FOR SYSTEM DESIGN INTERVIEWS
+# Chapter 3: A FRAMEWORK FOR SYSTEM DESIGN INTERVIEWS
 
 ## A 4-step process for effective system design interview
 
