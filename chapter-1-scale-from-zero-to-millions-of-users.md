@@ -40,7 +40,7 @@ Decouple
 
 By logging and metricx. Also, automate the tool
 
-What if the database gets more overloaded?
+> What if the database gets more overloaded?
 
 Scale the data tier.
 

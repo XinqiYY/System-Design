@@ -17,12 +17,16 @@ In a network system, a rate limiter is used to control the rate of traffic sent 
 
 ## Questions can be asked
 
-* Client-side, server-side, middleware
-* inform users who are throttled
+* Client-side or server-side, middleware
+* Does the rate limiter throttle API requests based on IP, user ID, or other properties?
+* Scale of the system? Is it built for a startup or a big company with a large user base?
+* Does the system work in a distributed environment?
+* Where to implement the rate limiter, a separate service or in application code?
+* Do we need to inform users who are throttled
 
 ## Where to put the rate limiter?
 
-* Client-side: Generally speaking, client is an unreliable place to enforce rate limiting because client requests can easily be forged by malicious actors. Moreover, we might not have control over the client implementation.
+* Client-side: Generally speaking, the client is an unreliable place to enforce rate limiting because client requests can easily be forged by malicious actors. Moreover, we might not have control over the client implementation.
 *   Server-side:
 
     <figure><img src=".gitbook/assets/image (4).png" alt=""><figcaption></figcaption></figure>
@@ -32,13 +36,13 @@ In a network system, a rate limiter is used to control the rate of traffic sent 
 
 > API Gateway
 
-Cloud microservices \[4] have become widely popular and rate limiting is usually implemented within a component called API gateway. API gateway is a fully managed service that supports rate limiting, SSL termination, authentication, IP whitelisting, servicing static content, etc.
+Cloud microservices \[4] have become widely popular, and rate limiting is usually implemented within a component called an API gateway. API gateway is a fully managed service that supports rate limiting, SSL termination, authentication, IP whitelisting, serving static content, etc.
 
 ## Algorithms for rate limiting
 
 ### Token bucket
 
-A token bucket is a container that has pre-defined capacity. Tokens are put in the bucket at preset rates periodically. Each request consumes one token. When a request arrives, we check if there are enough tokens in the bucket. If yes, take one token out for each request, else the request is dropped.
+A token bucket is a container that has a pre-defined capacity. Tokens are put in the bucket at preset rates periodically. Each request consumes one token. When a request arrives, we check if there are enough tokens in the bucket. If yes, take one token out for each request; else, the request is dropped.
 
 <figure><img src=".gitbook/assets/image (7).png" alt=""><figcaption></figcaption></figure>
 
@@ -46,6 +50,19 @@ The token bucket algorithm takes two parameters:
 
 * Bucket size: the maximum number of tokens allowed in the bucket.
 * Refill rate: number of tokens put into the bucket every second
+
+#### How many buckets do we need?
+
+It depends on the rate-limiting rule:
+
+* It is usually necessary to have different buckets for different API endpoints. For instance,\
+  if a user is allowed to make 1 post per second, add 150 friends per day, and like 5 posts per\
+  second, 3 buckets are required for each user.
+* If we need to throttle requests based on IP addresses, each IP address requires a bucket.
+* If the system allows a maximum of 10,000 requests per second, it makes sense to have a\
+  global bucket shared by all requests.
+
+#### **Pros vs Cons**
 
 | Pros                                      | Cons                                                         |
 | ----------------------------------------- | ------------------------------------------------------------ |
@@ -55,6 +72,8 @@ The token bucket algorithm takes two parameters:
 
 ### Leaking bucket
 
+Shopify is using this algorithm.&#x20;
+
 The leaking bucket algorithm is similar to the token bucket except that requests are processed at a fixed rate. It is usually implemented with a first-in-first-out (FIFO) queue. The algorithm works as follows:
 
 * When a request arrives, the system checks if the queue is full. If it is not full, the request is added to the queue.
@@ -63,7 +82,7 @@ The leaking bucket algorithm is similar to the token bucket except that requests
 
 <figure><img src=".gitbook/assets/image (8).png" alt=""><figcaption></figcaption></figure>
 
-Leaking bucket algorithm takes the following two parameters:
+The leaking bucket algorithm takes the following two parameters:
 
 * &#x20;Bucket size: it is equal to the queue size. The queue holds the requests to be processed at a fixed rate.
 * Outflow rate: it defines how many requests can be processed at a fixed rate, usually in seconds.
@@ -75,9 +94,9 @@ Leaking bucket algorithm takes the following two parameters:
 
 ### Fixed window counter
 
-Fixed window counter algorithm works as follows:
+The fixed window counter algorithm works as follows:
 
-* The algorithm divides the timeline into fix-sized time windows and assign a counter for each window.
+* The algorithm divides the timeline into fixed-sized time windows and assigns a counter for each window.
 * Each request increments the counter by one.
 * Once the counter reaches the pre-defined threshold, new requests are dropped until a new time window starts.
 
@@ -98,7 +117,7 @@ The sliding window log algorithm fixes the issue above:
 
 * The algorithm keeps track of request timestamps. Timestamp data is usually kept in cache, such as sorted sets of Redis.
 * When a new request comes in, remove all the outdated timestamps. Outdated timestamps are defined as those older than the start of the current time window.
-* Add timestamp of the new request to the log.
+* Add the timestamp of the new request to the log.
 * If the log size is the same or lower than the allowed count, a request is accepted. Otherwise, it is rejected.
 
 <figure><img src=".gitbook/assets/image (11).png" alt=""><figcaption></figcaption></figure>
@@ -106,8 +125,8 @@ The sliding window log algorithm fixes the issue above:
 In this example, the rate limiter allows 2 requests per minute.
 
 * The log is empty when a new request arrives at 1:00:01. Thus, the request is allowed.
-* A new request arrives at 1:00:30, the timestamp 1:00:30 is inserted into the log. After the insertion, the log size is 2, not larger than the allowed count. Thus, the request is allowed.
-* A new request arrives at 1:00:50, and the timestamp is inserted into the log. After the insertion, the log size is 3, larger than the allowed size 2. Therefore, this request is rejected even though the timestamp remains in the log.
+* A new request arrives at 1:00:30; the timestamp 1:00:30 is inserted into the log. After the insertion, the log size is 2, not larger than the allowed count. Thus, the request is allowed.
+* A new request arrives at 1:00:50, and the timestamp is inserted into the log. After the insertion, the log size is 3, larger than the allowed size of 2. Therefore, this request is rejected even though the timestamp remains in the log.
 * A new request arrives at 1:01:40. Requests in the range \[1:00:40,1:01:40) are within the latest time frame, but requests sent before 1:00:40 are outdated. Two outdated timestamps, 1:00:01 and 1:00:30, are removed from the log. After the remove operation, the log size becomes 2; therefore, the request is accepted.
 
 | Pros                                                                           | Cons                                                                                                         |
@@ -116,21 +135,21 @@ In this example, the rate limiter allows 2 requests per minute.
 
 ### Sliding window counter
 
-A hybrid approach that combines the fixed window counter and sliding window log.
+A hybrid approach that combines the fixed window counter and the sliding window log.
 
 <figure><img src=".gitbook/assets/image (12).png" alt=""><figcaption></figcaption></figure>
 
 Assume the rate limiter allows a maximum of 7 requests per minute, and there are 5 requests in the previous minute and 3 in the current minute. For a new request that arrives at a 30% position in the current minute, the number of requests in the rolling window is calculated using the following formula:
 
-* Requests in current window + requests in the previous window \* overlap percentage of the rolling window and previous window
-* Using this formula, we get 3 + 5 \* 0.7% = 6.5 request. Depending on the use case, the number can either be rounded up or down. In our example, it is rounded down to 6.
+* Requests in the current window + requests in the previous window \* overlap percentage of the rolling window and previous window
+* Using this formula, we get 3 + 5 \* 0.7% = 6.5 requests. Depending on the use case, the number can either be rounded up or down. In our example, it is rounded down to 6.
 
 Since the rate limiter allows a maximum of 7 requests per minute, the current request can go through. However, the limit will be reached after receiving one more request.
 
 | Pros                                                                                                 | Cons                                                                                                                                                                                                                                                                  |
 | ---------------------------------------------------------------------------------------------------- | --------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
-| It smooths out spikes in traffic since the rate is based on the average rate of the previous window. | It only works for a not-so-strict lookback window because it approximates the actual rate by aggregating counts from fixed time windows. As a result, requests near the boundaries of these windows may not be evenly distributed, leading to potential inaccuracies. |
-| Memory efficient.                                                                                    |                                                                                                                                                                                                                                                                       |
+| Memory efficient.                                                                                    | It only works for a not-so-strict lookback window because it approximates the actual rate by aggregating counts from fixed time windows. As a result, requests near the boundaries of these windows may not be evenly distributed, leading to potential inaccuracies. |
+| It smooths out spikes in traffic since the rate is based on the average rate of the previous window. |                                                                                                                                                                                                                                                                       |
 
 ## High-level architecture
 
@@ -138,8 +157,8 @@ Since the rate limiter allows a maximum of 7 requests per minute, the current re
 
 * Rules are stored on the disk. Workers frequently pull rules from the disk and store them in the cache.
 * When a client sends a request to the server, the request is sent to the rate limiter middleware first.
-* Rate limiter middleware loads rules from the cache. It fetches counters and last request timestamp from Redis cache. Based on the response, the rate limiter decides:
-  * If reached, the rate limiter returns 429 too many requests error to the client and the request is either dropped or forwarded to the queue.
+* Rate limiter middleware loads rules from the cache. It fetches counters and the last request timestamp from the Redis cache. Based on the response, the rate limiter decides:
+  * If reached, the rate limiter returns a 429 Too Many Requests error to the client, and the request is either dropped or forwarded to the queue.
   * If not reached, the request is sent to API servers and increments the counter in Redis.
 
 ### Components:
@@ -150,24 +169,6 @@ Tracking how many requests are sent from the same user, IP address, etc.
 
 * INCR: It increases the stored counter by 1.
 * EXPIRE: It sets a timeout for the counter. If the timeout expires, the counter is automatically deleted.
-
-> How are rate limiting rules created? Where are the rules stored?
-
-Rules are generally written in configuration files and saved on disk.
-
-> How to handle requests that are rate limited?
-
-In case a request is rate limited, APIs return a HTTP response code 429 (too many requests). We can enqueue the rate-limited requests to be processed later.
-
-> How does a client know whether it is being throttled?&#x20;
->
-> And how does a client know the number of allowed remaining requests before being throttled?
-
-The rate limiter returns the following HTTP headers to clients:
-
-* X-Ratelimit-Remaining: The remaining number of allowed requests within the window.&#x20;
-* X-Ratelimit-Limit: It indicates how many calls the client can make per time window.
-* X-Ratelimit-Retry-After: The number of seconds to wait until you can make a request again without being throttled.
 
 ## Rate limiter in a distributed environment
 
@@ -185,6 +186,8 @@ There are two challenges to supporting multiple servers and concurrent threads: 
 >
 > A better approach is to use centralized data stores like Redis.
 >
+> <img src=".gitbook/assets/image (21).png" alt="" data-size="original">
+>
 > ![](<.gitbook/assets/image (16).png>)
 
 ## Performance optimization
@@ -194,6 +197,38 @@ There are two challenges to supporting multiple servers and concurrent threads: 
 
 ## Monitoring
 
-If the rate limiting rules are too strict, many valid requests are dropped, relax the rules.&#x20;
+Monitor:
 
-If the rate limiter is ineffective in burst traffic, replace the algorithm, such as the Token bucket.
+* The rate-limiting algorithm is effective.
+  * If the rate limiter is ineffective in burst traffic, replace the algorithm, such as the Token bucket.
+* The rate-limiting rules are effective.
+  * If the rate-limiting rules are too strict, many valid requests are dropped; relax the rules.&#x20;
+
+## Follow-up questions:
+
+> How are rate limiting rules created? Where are the rules stored?
+
+Rules are generally written in configuration files and saved on disk.
+
+> How to handle requests that are rate limited?
+
+In case a request is rate-limited, APIs return a HTTP response code 429 (too many requests). We can enqueue the rate-limited requests to be processed later.
+
+> How does a client know whether it is being throttled?&#x20;
+>
+> And how does a client know the number of allowed remaining requests before being throttled?
+
+The rate limiter returns the following HTTP headers to clients:
+
+* X-Ratelimit-Remaining: The remaining number of allowed requests within the window.&#x20;
+* X-Ratelimit-Limit: It indicates how many calls the client can make per time window.
+* X-Ratelimit-Retry-After: The number of seconds to wait until you can make a request again without being throttled.
+
+When a user has sent too many requests, a 429 Too Many Requests error and X-Ratelimit-\
+Retry-After headers are returned to the client.
+
+> What if it exceeds the rate limit
+
+Depending on the use cases, we may enqueue the rate-limited requests to be\
+processed later. For example, if some orders are rate-limited due to system overload, we may\
+keep those orders to be processed later.
