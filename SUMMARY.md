@@ -6,3 +6,4 @@
 * [Chapter 3: A FRAMEWORK FOR SYSTEM DESIGN INTERVIEWS](chapter-3-a-framework-for-system-design-interviews.md)
 * [Chapter 4: DESIGN A RATE LIMITER](chapter-4-design-a-rate-limiter.md)
 * [Cache](cache.md)
+* [Chapter 5: DESIGN CONSISTENT HASHING](chapter-5-design-consistent-hashing.md)

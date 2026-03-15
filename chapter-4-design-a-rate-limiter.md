@@ -232,3 +232,17 @@ Retry-After headers are returned to the client.
 Depending on the use cases, we may enqueue the rate-limited requests to be\
 processed later. For example, if some orders are rate-limited due to system overload, we may\
 keep those orders to be processed later.
+
+Additional talking points:
+
+* Hard vs soft rate limiting:
+  * Hard: The number of requests cannot exceed the threshold.
+  * Soft: Requests can exceed the threshold for a short period.
+* Rate limiting at different levels:
+  * Layer 1: Physical layer, Layer 2: Data link layer, Layer 3: Network layer, Layer 4: Transport layer, Layer 5: Session layer, Layer 6: Presentation layer, Layer 7: Application layer.
+* Avoid being rate-limited:
+  * Use client cache to avoid making frequent API calls.
+  * Understand the limit and do not send too many requests in a short time frame.
+  * Include code to catch exceptions or errors so your client can gracefully recover from\
+    exceptions.
+  * Add sufficient back-off time to retry logic.
