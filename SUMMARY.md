@@ -8,3 +8,5 @@
 * [System components](system-components.md)
 * [Chapter 5: DESIGN CONSISTENT HASHING](chapter-5-design-consistent-hashing.md)
 * [Chapter 6: DESIGN A KEY-VALUE STORE](chapter-6-design-a-key-value-store.md)
+* [Chapter 7: DESIGN A UNIQUE ID GENERATOR IN DISTRIBUTED SYSTEMS](chapter-7-design-a-unique-id-generator-in-distributed-systems.md)
+* [Chapter 8: DESIGN A URL SHORTENER](chapter-8-design-a-url-shortener.md)
