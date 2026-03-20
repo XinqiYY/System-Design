@@ -12,3 +12,4 @@
 * [Chapter 8: DESIGN A URL SHORTENER](chapter-8-design-a-url-shortener.md)
 * [Chapter 9:  DESIGN A WEB CRAWLER](chapter-9-design-a-web-crawler.md)
 * [Chapter 10: DESIGN A NOTIFICATION SYSTEM](chapter-10-design-a-notification-system.md)
+* [Chapter 11: DESIGN A NEWS FEED SYSTEM](chapter-11-design-a-news-feed-system.md)
