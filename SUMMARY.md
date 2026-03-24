@@ -14,3 +14,4 @@
 * [Chapter 10: DESIGN A NOTIFICATION SYSTEM](chapter-10-design-a-notification-system.md)
 * [Chapter 11: DESIGN A NEWS FEED SYSTEM](chapter-11-design-a-news-feed-system.md)
 * [Chapter 12: DESIGN A CHAT SYSTEM](chapter-12-design-a-chat-system.md)
+* [Chapter 13: DESIGN A SEARCH AUTOCOMPLETE SYSTEM](chapter-13-design-a-search-autocomplete-system.md)
