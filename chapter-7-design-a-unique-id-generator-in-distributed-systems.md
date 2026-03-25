@@ -55,7 +55,7 @@ generated independently without coordination between servers
 
 > How does it work?
 
-<figure><img src=".gitbook/assets/image (13).png" alt=""><figcaption></figcaption></figure>
+<figure><img src=".gitbook/assets/image (13) (1).png" alt=""><figcaption></figcaption></figure>
 
 It use a centralized auto\_increment feature in a single database server.
 
@@ -72,7 +72,7 @@ It use a centralized auto\_increment feature in a single database server.
 
 Instead of generating an ID directly, we divide an ID into different sections
 
-<figure><img src=".gitbook/assets/image (1) (1).png" alt=""><figcaption></figcaption></figure>
+<figure><img src=".gitbook/assets/image (1) (1) (1).png" alt=""><figcaption></figcaption></figure>
 
 Each section is explained below.
 
@@ -91,7 +91,7 @@ Datacenter IDs and machine IDs are chosen at startup time, fixed once the system
 * As timestamps grow with time, IDs are sortable by time
 * The image shows how binary representation is converted to UTC. You can also convert UTC back to binary representation using a similar method
 
-<figure><img src=".gitbook/assets/image (2) (1).png" alt=""><figcaption></figcaption></figure>
+<figure><img src=".gitbook/assets/image (2) (1) (1).png" alt=""><figcaption></figcaption></figure>
 
 > The maximum timestamp that can be represented in 41 bits is:
 >

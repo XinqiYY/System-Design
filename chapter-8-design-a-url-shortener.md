@@ -41,14 +41,14 @@ Use hash function to shrot the URL. The hash function must satisfy the following
 * Each longURL must be hashed to one hashValue.
 * Each hashValue can be mapped back to the longURL.
 
-<figure><img src=".gitbook/assets/image (4) (1).png" alt=""><figcaption></figcaption></figure>
+<figure><img src=".gitbook/assets/image (4) (1) (1).png" alt=""><figcaption></figcaption></figure>
 
 ### **URL redirecting**
 
 > GET api/v1/shortUrl\
 > • Return longURL for HTTP redirection
 
-<figure><img src=".gitbook/assets/image (3) (1).png" alt=""><figcaption></figcaption></figure>
+<figure><img src=".gitbook/assets/image (3) (1) (1).png" alt=""><figcaption></figcaption></figure>
 
 **301 VS 302**
 
@@ -73,7 +73,7 @@ Hashtable: \<shortURL, longURL>
 Hashtable is good, but not feasible for real-world systems as memory resources are limited\
 and expensive. A better way is to store \<shortURL, longURL> mapping in a relational database.
 
-<figure><img src=".gitbook/assets/image (6) (1).png" alt=""><figcaption></figcaption></figure>
+<figure><img src=".gitbook/assets/image (6) (1) (1).png" alt=""><figcaption></figcaption></figure>
 
 ### Hash function
 
@@ -82,13 +82,13 @@ and expensive. A better way is to store \<shortURL, longURL> mapping in a relati
 The hashValue consists of characters from \[0-9, a-z, A-Z], containing 10 + 26 + 26 = 62\
 possible characters. The hush value length could be:
 
-<figure><img src=".gitbook/assets/image (7) (1).png" alt=""><figcaption></figcaption></figure>
+<figure><img src=".gitbook/assets/image (7) (1) (1).png" alt=""><figcaption></figcaption></figure>
 
 #### Hash + collision resolution
 
 Well-known hash functions are: CRC32, MD5, or SHA-1
 
-<figure><img src=".gitbook/assets/image (8) (1).png" alt=""><figcaption></figcaption></figure>
+<figure><img src=".gitbook/assets/image (8) (1) (1).png" alt=""><figcaption></figcaption></figure>
 
 > &#x20;Even the shortest hash value (from CRC32) is too long (more than 7 characters). How can we make it shorter?
 
@@ -112,17 +112,17 @@ etc.
 * 1115710 = 2 x 62, 2 + 55 x 62, 1 + 59 x 62, 0 = \[2, 55, 59] -> \[2, T, X] in base 62
 * Thus, the short URL is **https://tinyurl.com /2TX**
 
-<figure><img src=".gitbook/assets/image (9) (1).png" alt=""><figcaption></figcaption></figure>
+<figure><img src=".gitbook/assets/image (9) (1) (1).png" alt=""><figcaption></figcaption></figure>
 
 #### Comparison of the two approaches
 
-<figure><img src=".gitbook/assets/image (10) (1).png" alt=""><figcaption></figcaption></figure>
+<figure><img src=".gitbook/assets/image (10) (1) (1).png" alt=""><figcaption></figcaption></figure>
 
 ### URL shortening deep dive
 
-<figure><img src=".gitbook/assets/image (11) (1).png" alt=""><figcaption></figcaption></figure>
+<figure><img src=".gitbook/assets/image (11) (1) (1).png" alt=""><figcaption></figcaption></figure>
 
-<figure><img src=".gitbook/assets/image (12) (1).png" alt=""><figcaption></figcaption></figure>
+<figure><img src=".gitbook/assets/image (12) (1) (1).png" alt=""><figcaption></figcaption></figure>
 
 > How to generate a global unique ID?
 
@@ -132,7 +132,7 @@ Use the distributed unique ID generator. Check chapter 7
 
 Use cache to improve read performance
 
-<figure><img src=".gitbook/assets/image (14).png" alt=""><figcaption></figcaption></figure>
+<figure><img src=".gitbook/assets/image (14) (1).png" alt=""><figcaption></figcaption></figure>
 
 ## Step 4 - Wrap up
 

@@ -29,10 +29,10 @@ In a network system, a rate limiter is used to control the rate of traffic sent 
 * Client-side: Generally speaking, the client is an unreliable place to enforce rate limiting because client requests can easily be forged by malicious actors. Moreover, we might not have control over the client implementation.
 *   Server-side:
 
-    <figure><img src=".gitbook/assets/image (4) (1) (1).png" alt=""><figcaption></figcaption></figure>
+    <figure><img src=".gitbook/assets/image (4) (1) (1) (1).png" alt=""><figcaption></figcaption></figure>
 *   Middleware:&#x20;
 
-    <figure><img src=".gitbook/assets/image (6) (1) (1).png" alt=""><figcaption></figcaption></figure>
+    <figure><img src=".gitbook/assets/image (6) (1) (1) (1).png" alt=""><figcaption></figcaption></figure>
 
 > API Gateway
 
@@ -44,7 +44,7 @@ Cloud microservices \[4] have become widely popular, and rate limiting is usuall
 
 A token bucket is a container that has a pre-defined capacity. Tokens are put in the bucket at preset rates periodically. Each request consumes one token. When a request arrives, we check if there are enough tokens in the bucket. If yes, take one token out for each request; else, the request is dropped.
 
-<figure><img src=".gitbook/assets/image (7) (1) (1).png" alt=""><figcaption></figcaption></figure>
+<figure><img src=".gitbook/assets/image (7) (1) (1) (1).png" alt=""><figcaption></figcaption></figure>
 
 The token bucket algorithm takes two parameters:
 
@@ -80,7 +80,7 @@ The leaking bucket algorithm is similar to the token bucket except that requests
 * Otherwise, the request is dropped.
 * Requests are pulled from the queue and processed at regular intervals.
 
-<figure><img src=".gitbook/assets/image (8) (1) (1).png" alt=""><figcaption></figcaption></figure>
+<figure><img src=".gitbook/assets/image (8) (1) (1) (1).png" alt=""><figcaption></figcaption></figure>
 
 The leaking bucket algorithm takes the following two parameters:
 
@@ -100,11 +100,11 @@ The fixed window counter algorithm works as follows:
 * Each request increments the counter by one.
 * Once the counter reaches the pre-defined threshold, new requests are dropped until a new time window starts.
 
-<figure><img src=".gitbook/assets/image (9) (1) (1).png" alt=""><figcaption></figcaption></figure>
+<figure><img src=".gitbook/assets/image (9) (1) (1) (1).png" alt=""><figcaption></figcaption></figure>
 
 > The main problem is that a burst of traffic at the edges of time windows could cause more requests than allowed quota to go through.
 
-<figure><img src=".gitbook/assets/image (10) (1) (1).png" alt=""><figcaption></figcaption></figure>
+<figure><img src=".gitbook/assets/image (10) (1) (1) (1).png" alt=""><figcaption></figcaption></figure>
 
 | Pros                                                                               | Cons                                                                                                      |
 | ---------------------------------------------------------------------------------- | --------------------------------------------------------------------------------------------------------- |
@@ -120,7 +120,7 @@ The sliding window log algorithm fixes the issue above:
 * Add the timestamp of the new request to the log.
 * If the log size is the same or lower than the allowed count, a request is accepted. Otherwise, it is rejected.
 
-<figure><img src=".gitbook/assets/image (11) (1) (1).png" alt=""><figcaption></figcaption></figure>
+<figure><img src=".gitbook/assets/image (11) (1) (1) (1).png" alt=""><figcaption></figcaption></figure>
 
 In this example, the rate limiter allows 2 requests per minute.
 
@@ -137,7 +137,7 @@ In this example, the rate limiter allows 2 requests per minute.
 
 A hybrid approach that combines the fixed window counter and the sliding window log.
 
-<figure><img src=".gitbook/assets/image (12) (1) (1).png" alt=""><figcaption></figcaption></figure>
+<figure><img src=".gitbook/assets/image (12) (1) (1) (1).png" alt=""><figcaption></figcaption></figure>
 
 Assume the rate limiter allows a maximum of 7 requests per minute, and there are 5 requests in the previous minute and 3 in the current minute. For a new request that arrives at a 30% position in the current minute, the number of requests in the rolling window is calculated using the following formula:
 
@@ -153,7 +153,7 @@ Since the rate limiter allows a maximum of 7 requests per minute, the current re
 
 ## High-level architecture
 
-<figure><img src=".gitbook/assets/image (14) (1).png" alt=""><figcaption></figcaption></figure>
+<figure><img src=".gitbook/assets/image (14) (1) (1).png" alt=""><figcaption></figcaption></figure>
 
 * Rules are stored on the disk. Workers frequently pull rules from the disk and store them in the cache.
 * When a client sends a request to the server, the request is sent to the rate limiter middleware first.
@@ -186,9 +186,9 @@ There are two challenges to supporting multiple servers and concurrent threads: 
 >
 > A better approach is to use centralized data stores like Redis.
 >
-> <img src=".gitbook/assets/image (21).png" alt="" data-size="original">
+> <img src=".gitbook/assets/image (21) (1).png" alt="" data-size="original">
 >
-> ![](<.gitbook/assets/image (16).png>)
+> ![](<.gitbook/assets/image (16) (1).png>)
 
 ## Performance optimization
 

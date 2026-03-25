@@ -6,13 +6,13 @@ Estimate system capacity or performance requirements.
 
 A byte is a sequence of 8 bits. An ASCII character uses one byte of memory (8 bits)
 
-<figure><img src=".gitbook/assets/image (2) (1) (1).png" alt=""><figcaption></figcaption></figure>
+<figure><img src=".gitbook/assets/image (2) (1) (1) (1).png" alt=""><figcaption></figcaption></figure>
 
 ## Latency:
 
 Latency of different computer operations:
 
-<figure><img src=".gitbook/assets/image (17).png" alt=""><figcaption></figcaption></figure>
+<figure><img src=".gitbook/assets/image (17) (1).png" alt=""><figcaption></figcaption></figure>
 
 > ns = nanosecond, µs = microsecond, ms = millisecond\
 > 1 ns = 10^-9 seconds\
@@ -21,7 +21,7 @@ Latency of different computer operations:
 
 **Visualization version:**
 
-<figure><img src=".gitbook/assets/image (18).png" alt=""><figcaption></figcaption></figure>
+<figure><img src=".gitbook/assets/image (18) (1).png" alt=""><figcaption></figcaption></figure>
 
 **Conclusion:**
 
@@ -39,7 +39,7 @@ A **service level agreement (SLA)** is a commonly used term for service provider
 
 > More nine more better. Most services fall between 99% and 100%
 
-<div data-full-width="true"><figure><img src=".gitbook/assets/image (3) (1) (1).png" alt=""><figcaption></figcaption></figure></div>
+<div data-full-width="true"><figure><img src=".gitbook/assets/image (3) (1) (1) (1).png" alt=""><figcaption></figcaption></figure></div>
 
 ## Tips:
 
