@@ -53,9 +53,9 @@ Basic algorithm:
 
 ## Step 2 - Propose high-level design and get buy-in
 
-<figure><img src=".gitbook/assets/image (3) (1).png" alt=""><figcaption></figcaption></figure>
+<figure><img src=".gitbook/assets/image (3) (1) (1).png" alt=""><figcaption></figcaption></figure>
 
-<figure><img src=".gitbook/assets/image (4) (1).png" alt=""><figcaption></figcaption></figure>
+<figure><img src=".gitbook/assets/image (4) (1) (1).png" alt=""><figcaption></figcaption></figure>
 
 ### Seed URLs
 
@@ -105,7 +105,7 @@ Both disk and memory are used
 
 Parses and extracts links from HTML pages
 
-<figure><img src=".gitbook/assets/image (2) (1).png" alt=""><figcaption></figcaption></figure>
+<figure><img src=".gitbook/assets/image (2) (1) (1).png" alt=""><figcaption></figcaption></figure>
 
 ### URL Filter
 
@@ -133,7 +133,7 @@ BFS is commonly used by web crawlers and is implemented by a first-in-first-out 
 
 * Most links from the same web page are linked back to the same host. Too many calls to the same host seem as “impolite.”
 
-<figure><img src=".gitbook/assets/image (5) (1).png" alt=""><figcaption></figcaption></figure>
+<figure><img src=".gitbook/assets/image (5) (1) (1).png" alt=""><figcaption></figcaption></figure>
 
 * BFS does not have priority, and not every page has the same level of quality and importance. We may want to prioritize URLs according to their page ranks, web traffic, update frequency, etc
 
@@ -145,7 +145,7 @@ URL frontier to ensure politeness, URL prioritization, and freshness
 
 Politeness is to download one page at a time from the same host to avoid being "impolite" and DOS. A delay can be added between two download tasks. The politeness constraint is implemented by maintaining a mapping from website hostnames to download (worker) threads. Each downloader thread has a separate FIFO queue and only downloads URLs obtained from that queue
 
-<figure><img src=".gitbook/assets/image (6) (1).png" alt=""><figcaption></figcaption></figure>
+<figure><img src=".gitbook/assets/image (6) (1) (1).png" alt=""><figcaption></figcaption></figure>
 
 * Queue router: It ensures that each queue (b1, b2, … bn) only contains URLs from the same host.
 * Mapping table: It maps each host to a queue.
@@ -153,13 +153,13 @@ Politeness is to download one page at a time from the same host to avoid being "
 * Queue selector: Each worker thread is mapped to a FIFO queue, and it only downloads URLs from that queue. The queue selection logic is done by the Queue selector.
 * Worker thread 1 to N. A worker thread downloads web pages one by one from the same host. A delay can be added between two download tasks.
 
-<figure><img src=".gitbook/assets/image (7) (1).png" alt=""><figcaption></figcaption></figure>
+<figure><img src=".gitbook/assets/image (7) (1) (1).png" alt=""><figcaption></figcaption></figure>
 
 #### Priority
 
 We prioritize URLs based on usefulness, which can be measured by PageRank \[10], website traffic, update frequency, etc.
 
-<figure><img src=".gitbook/assets/image (8) (1).png" alt=""><figcaption></figcaption></figure>
+<figure><img src=".gitbook/assets/image (8) (1) (1).png" alt=""><figcaption></figcaption></figure>
 
 * Prioritizer: It takes URLs as input and computes the priorities.
 * Queue f1 to fn: Each queue has an assigned priority. Queues with high priority are selected with higher probability.
@@ -169,7 +169,7 @@ We prioritize URLs based on usefulness, which can be measured by PageRank \[10],
 • Front queues: manage prioritization\
 • Back queues: manage politeness
 
-<figure><img src=".gitbook/assets/image (9) (1).png" alt=""><figcaption></figcaption></figure>
+<figure><img src=".gitbook/assets/image (9) (1) (1).png" alt=""><figcaption></figcaption></figure>
 
 #### Freshness
 
@@ -202,7 +202,7 @@ It used by websites to communicate with crawlers. It specifies what pages crawle
 
 To achieve high performance, crawl jobs are distributed into multiple servers, and each server runs multiple threads. The URL space is partitioned into smaller pieces; so, each downloader is responsible for a subset of the URLs.
 
-<figure><img src=".gitbook/assets/image (10) (1).png" alt=""><figcaption></figcaption></figure>
+<figure><img src=".gitbook/assets/image (10) (1) (1).png" alt=""><figcaption></figcaption></figure>
 
 **Cache DNS Resolver**
 
